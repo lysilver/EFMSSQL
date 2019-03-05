@@ -7,5 +7,5 @@ net framework mvc
 entity framework
 数据库 sqlserver
 Autofac
-H ui 
+H-ui 
 table jqGrid
