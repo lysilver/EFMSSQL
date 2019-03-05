@@ -1,0 +1,8 @@
+﻿<div class="text-c">
+    日期范围：
+    <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" value="@ViewBag.startDate" style="width:120px;">
+    -
+    <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" value="@ViewBag.endDate" s style="width:120px;">
+    <input type="text" class="input-text" style="width:250px" placeholder="输入名称" id="keyword" name="keyword">
+    <button type="submit" onclick="search()" class="btn btn-success" id="search" name="search"><i class="Hui-iconfont">&#xe665;</i> 搜日志</button>
+</div>

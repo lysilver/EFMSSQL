@@ -1,0 +1,21 @@
+﻿<html>
+<head>
+    @Html.Partial("_head")
+    @Styles.Render("~/Content/listcss")
+    @Styles.Render("~/Content/bootstrapcdncss")
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">*@
+    <link rel="stylesheet" type="text/css" href="~/lib/jqGrid/ui.jqgrid-bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    @RenderSection("css", false)
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    @RenderBody()
+    @Scripts.Render("~/bundles/listjs")
+    <script type="text/javascript" src="~/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="~/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    @Scripts.Render("~/bundles/bootstrapcdnjs")
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>*@
+    @RenderSection("MasterPart", false)
+</body>
+</html>

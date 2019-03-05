@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    @Html.Partial("_head")
+    @Html.Partial("_css")
+    <title>Excel上传</title>
+</head>
+<body>
+    <article class="page-container">
+        <form action="@Url.Action("Excel", "User")" enctype="multipart/form-data" method="post" class="form form-horizontal" id="form-member-add">
+            <div>
+                <fieldset id="myfieldset">
+                    <legend>excel模版 </legend><font color="red">导入基站的模板格式如下，若模板格式不正确，则相应的基站不能导入!</font><br />
+                    <p style="color: Red; text-align: center;">@Html.ActionLink("下载模版", "GetFile")</p>
+                </fieldset>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">附件：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span class="btn-upload form-group">
+                        <input class="input-text upload-url" type="text" name="uploadfile" id="uploadfile" readonly nullmsg="请添加附件！" style="width:300px">
+                        <a href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
+                        <input type="file" id="pic" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" multiple onchange="document.getElementById('uploadfile').value = this.value" name="pic" class="input-file">
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                    <input id="tj" onclick="Submit()" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                    <span class="btn-upload form-group" style="color: red">@ViewBag.error</span>
+                </div>
+            </div>
+        </form>
+    </article>
+    @Html.Partial("_js")
+    <script type="text/javascript">
+        function Submit() {
+            $("#form-member-add").submit();
+        }
+    </script>
+</body>
+</html>

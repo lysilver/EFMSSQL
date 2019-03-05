@@ -1,0 +1,163 @@
+﻿@using Library.Config
+<!DOCTYPE html>
+<html>
+<head>
+    @Html.Partial("_head")
+    <link rel="stylesheet" type="text/css" href="~/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="~/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="~/static/h-ui.admin/css/style.css" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/lib/jqGrid/ui.jqgrid-bootstrap.css" />
+    
+    <title>用户管理</title>
+</head>
+<body>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="pd-20">
+        <div class="text-c">
+            日期范围：
+            <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;">
+            -
+            <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" style="width:120px;">
+            <input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" id="" name=""><button type="submit" onclick="getSelectedRows()" class="btn btn-success" id="" name=""><i class="icon-search"></i> 搜用户</button>
+        </div>
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span class="l">
+                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="icon-trash"></i> 批量删除</a>
+                <a href="javascript:;" onclick="user_add('550','','添加用户','user-add.html')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加用户</a>
+            </span>
+            <span class="r">共有数据：<strong>88</strong> 条</span>
+        </div>
+        @*<table id="user-table" class="table table-border table-bordered table-hover table-bg table-sort">
+                <thead>
+                    <tr class="text-c">
+                        <th width="25"><input type="checkbox" id="checkAll" name="checkAll" value=""></th>
+            <th width="260">ID</th>
+            <th width="100">用户名</th>
+            <th width="40">性别</th>
+            <th width="90">手机</th>
+            <th width="150">邮箱</th>
+            <th width="">地址</th>
+            <th width="130">加入时间</th>
+            <th width="70">状态</th>
+            <th width="100">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr class="text-c">
+                    <th>
+                        <input type="checkbox" name="checkList">
+                    </th>
+                </tr>
+            </tbody>
+            </table>
+            <div id="pageNav" class="pageNav"></div>*@
+
+        <table id="jqGrid" class="table table-border table-bordered table-hover table-bg table-sort"></table>
+        <div id="jqGridPager"></div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/layer")
+    <script type="text/javascript" src="~/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script type="text/javascript" src="~/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+    <script type="text/ecmascript" src="~/lib/jqGrid/jquery.jqGrid.min.js"></script>
+<script type="text/ecmascript" src="~/lib/jqGrid/grid.locale-cn.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js">
+</script>
+<script>
+    //$.jgrid.defaults.width = 780;
+    $.jgrid.defaults.styleUI = 'Bootstrap';
+</script>
+    <script type="text/javascript">
+
+        $(function () {
+            var gridtable = $("#jqGrid").jqGrid({
+                "url": "/System/User/GetUserList",
+                "datatype": "json",
+                colModel: [
+                    { label: 'ID', name: 'SystemUserId', width: 100, key: true },
+                    { label: 'CreateTime', name: 'CreateTime', width: 100 },
+                    { label: 'Age', name: 'Age', width: 45 }
+                ],
+                loadonce: true,
+                viewrecords: true,
+                sortorder: "asc",
+                sortname: 'CreateTime',
+                caption: "用户",
+                //width: 780,
+                //height: 200,
+                rowNum: 10,
+                rowList: [10,20, 30, 50],
+                rownumbers: true,
+                rownumWidth: 25,
+                multiselect: true,
+                autowidth: true,
+                height: 180,
+                pager: "#jqGridPager"
+            });
+            function getSelectedRows() {
+                var grid = $("#jqGrid");
+                var rowKey = grid.getGridParam("selrow");
+
+                if (!rowKey)
+                    alert("No rows are selected");
+                else {
+                    var selectedIDs = grid.getGridParam("selarrrow");
+                    var result = "";
+                    for (var i = 0; i < selectedIDs.length; i++) {
+                        result += selectedIDs[i] + ",";
+                    }
+
+                    alert(result);
+                }
+            }
+            //var userData = $('#user-table').DataTable({
+            //    "ajax": {
+            //        "url": "/System/User/GetUserList",    //指定数据源
+            //        "dataSrc": "",
+            //        "type": "POST"
+            //    },
+            //    "serverSide": true,
+            //    "deferRender": true,//延迟加载
+            //    "pagingType": "simple_numbers",//number 、simple 、simple_numbers、full 、full_numbers、first_last_numbers
+            //    "lengthMenu": [
+            //        [10, 20, 50, 100],
+            //        [10, 20, 50, 100]
+            //    ],//每页显示条数设置
+            //    "language": {
+            //        "lengthMenu": "每页 _MENU_ 条记录",
+            //        "zeroRecords": "没有找到记录",
+            //        //"info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
+            //        "infoEmpty": "无记录",
+            //        "infoFiltered": "(从 _MAX_ 条记录过滤)"
+            //    },
+            //    //"pageLength": 10,
+            //    "processing": true,
+            //    "columns": [
+            //        { "data": "SystemUserId" }
+            //    ],
+            //    //"columnDefs": [
+            //    //    {
+            //    //        "targets": [ 0 ],
+            //    //        "visible": false,
+            //    //        "searchable": false
+            //    //    },
+            //    //{
+            //    // targets: [ 0 ],
+            //    // orderData: [ 0, 1 ]  //如果第一列进行排序，有相同数据则按照第二列顺序排列
+            //    //}
+            //    //], //隐藏列功能
+            //    "bPaginate": true, //翻页功能
+            //    "bLengthChange": true, //改变每页显示数据数量
+            //    "bFilter": true, //过滤功能
+            //    "bSort": true, //排序功能
+            //    "bInfo": true,//页脚信息
+            //    "bAutoWidth": true//自动宽度
+            //});
+        })
+    </script>
+</body>
+</html>

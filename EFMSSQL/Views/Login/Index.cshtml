@@ -1,0 +1,103 @@
+﻿@using Library.Config
+@{
+    Layout = null;
+}
+<html>
+<head>
+    @Html.Partial("_head")
+    @Styles.Render("~/Content/logincss")
+    @Styles.Render("~/lib/Hui-iconfont/1.0.8/iconfont.css")
+    @*<link rel="stylesheet" href="~/lib/Hui-iconfont/1.0.8/iconfont.css" />*@
+    <title>@Config.GetAppsetting("systemName")</title>
+</head>
+<body>
+    <input type="hidden" id="TenantId" name="TenantId" value="" />
+    <div class="header"></div>
+    <div class="loginWraper">
+        <div id="loginform" class="loginBox">
+            @*<form class="form form-horizontal">*@
+            <div class="form form-horizontal">
+                <div class="row cl">
+                    <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+                    <div class="formControls col-xs-8">
+                        <input id="tel" name="tel" type="text" placeholder="账户" class="input-text size-L">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
+                    <div class="formControls col-xs-8">
+                        <input id="pwd" name="pwd" type="password" placeholder="密码" class="input-text size-L">
+                    </div>
+                </div>
+                @*<div class="row cl">
+                        <div class="formControls col-xs-8 col-xs-offset-3">
+                            <input class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value='';}" value="验证码:" style="width:150px;">
+                            <img src=""> <a id="kanbuq" href="javascript:;">看不清，换一张</a>
+                        </div>
+                    </div>*@
+                <div class="row cl">
+                    <div class="formControls col-xs-8 col-xs-offset-3">
+                        <input id="btnlogin" type="submit" class="btn btn-success radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="reset" class="btn btn-default radius size-L" value="&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;消&nbsp;">
+                    </div>
+                </div>
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+    <div class="footer">@Config.GetAppsetting("record")</div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/md5")
+    <script type="text/javascript" src="~/lib/layer/layer.js"></script>
+    <script>
+        $(function () {
+            $("#tel").focus();
+            document.onkeydown = function (e) {
+                var ev = document.all ? window.event : e;
+                if (ev.keyCode == 13) {
+                    sub();
+                }
+            };
+            $("#btnlogin").click(function () {
+                sub();
+            });
+        })  
+        function sub() {
+                var tel = $("#tel").val().trim();
+                var pwd = $("#pwd").val().trim();
+                if (tel.length == 0) {
+                    layer.msg('账号不能为空!', { icon: 0 });
+                    $("#tel").focus();
+                    return false;
+                } else if (pwd.length == 0) {
+                    layer.msg('密码不能为空!', { icon: 0 });
+                    $("#pwd").focus();
+                    return false;
+                } else {
+                    layer.msg('正在登录请稍候!', {
+                        icon: 16
+                        , shade: 0.01
+                    });
+                    $("#btnlogin").attr("disable", true);
+                    pwd = $.md5(pwd);
+                    var url = "/Login/CheckLogin";
+                    var data = {
+                        tel: tel,
+                        pwd: pwd
+                    }
+                    $.post(url, data, function (result) {
+                        console.info(result);
+                        if (result.Flag) {
+                            window.location.href = "/Home";
+                        } else {
+                            layer.msg(result.Msg, { icon: 1 });
+                            $("#pwd").focus();
+                            $("#btnlogin").removeAttr("disable");
+                        }
+                    });
+                }
+            };
+    </script>
+</body>
+</html>
